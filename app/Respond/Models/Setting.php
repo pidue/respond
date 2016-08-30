@@ -124,32 +124,18 @@ class Setting {
           // walk through settings
           foreach($settings as $setting) {
 
-            // handle sets
-            if(isset($setting['sets'])) {
 
-              // set attribute
-              if(isset($setting['attribute'])) {
-
-                // find setting
-                $els = $dom->find('['.$setting['id'].']');
-
-                // set attribute
-                foreach($els as $el) {
-                  $el->setAttribute($setting['attribute'], $setting['value']);
+            if (isset($setting['actions']) && is_array($setting['actions'])) {
+              // multiple action for the current setting
+              foreach($setting['actions'] as $action) {
+                $merged = array_merge((Array)$action, (Array)$setting);
+                if (isset($merged['sets'])) {
+                  self::applySetting($merged, $dom, $set_css, $css);
                 }
-
               }
-
-              // set css
-              if(isset($setting['css'])) {
-
-                // build css string
-                $set_css = true;
-                $css .= str_replace('config(--'.$setting['id'].')', $setting['value'], $setting['css']);
-
-              }
-
-            }
+            } else if (isset($setting['sets'])) {
+              self::applySetting($setting, $dom, $set_css, $css);
+            }            
 
           }
 
@@ -183,4 +169,50 @@ class Setting {
 
   }
 
+  private static function applySetting($setting, $dom, &$set_css, &$css) {
+
+    $selector = isset($setting['selector']) ? $setting['selector'] : '['.$setting['id'].']';
+
+    // set attribute
+    if($setting['sets'] == 'attribute') {
+
+      // find elements
+      $els = $dom->find($selector);
+
+      // set attribute
+      foreach($els as $el) {
+        $el->setAttribute($setting['attribute'], $setting['value']);
+      }
+
+    }
+
+    // set css
+    if($setting['sets'] == 'css') {
+
+      // build css string
+      $set_css = true;
+      $css .= str_replace('config(--'.$setting['id'].')', $setting['value'], $setting['css']);
+
+    }
+
+    // set element content
+    if($setting['sets'] == 'content') {
+
+      // find elements
+      $els = $dom->find($selector);
+
+      // set attribute
+      foreach($els as $el) {
+        $el->innertext = isset($setting['escape']) ?  htmlentities($setting['value']) : $setting['value'];
+      }
+
+    }
+
+    // TODO: add / remove css class. 
+    // when a checkbox setting, add class if true, remove class if false (preserving the other classes)
+    // when a select setting, remove all options then add the selected one (preserving the other classes)
+    // when a text setting, replace the whole 'class' attribute value
+
+
+  }
 }
