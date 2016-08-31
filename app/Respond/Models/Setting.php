@@ -208,6 +208,35 @@ class Setting {
 
     }
 
+    // set element content
+    if($setting['sets'] == 'class') {
+
+      // find elements
+      $els = $dom->find($selector);
+
+      // set attribute
+      foreach($els as $el) {
+        if ($setting['type'] == 'select') {
+          $currentClasses = $el->getAttribute('class');
+          foreach($setting['options'] as $option) {
+            $currentClasses = self::removeClass($currentClasses, $option['value']);
+          }
+          $currentClasses = self::addClass($currentClasses, $setting['value']);
+          $el->setAttribute('class', $currentClasses);
+        } else if ($setting['type'] == 'text') {
+          $el->setAttribute('class', $setting['value']);
+        } else if ($setting['type'] == 'checkbox') {
+          $currentClasses = $el->getAttribute('class');
+          if ($setting['value']) {
+            $currentClasses = self::addClass($currentClasses, $setting['class']);
+          } else {
+            $currentClasses = self::removeClass($currentClasses, $setting['class']);
+          }
+          $el->setAttribute('class', $currentClasses);
+        }
+      }
+
+    }
     // TODO: add / remove css class. 
     // when a checkbox setting, add class if true, remove class if false (preserving the other classes)
     // when a select setting, remove all options then add the selected one (preserving the other classes)
@@ -215,4 +244,17 @@ class Setting {
 
 
   }
+
+  private static function removeClass($currentClasses, $classToRemove ) {
+    $currentClasses = preg_replace('/(?<=\s|^)' . $classToRemove . '(?=\s|$)/','', $currentClasses);
+    $currentClasses = preg_replace('/ +/',' ', $currentClasses);
+    return $currentClasses;
+  }
+
+  private static function addClass($currentClasses, $classToAdd ) {
+    $currentClasses = preg_replace('/$/',' ' . $classToAdd, $currentClasses);
+    $currentClasses = preg_replace('/ +/',' ', $currentClasses);
+    return $currentClasses;
+  }
 }
+

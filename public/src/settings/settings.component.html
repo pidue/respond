@@ -32,8 +32,13 @@
         <div *ngSwitchCase="'select'">
           <label>{{setting.label}}</label>
           <select id="{{setting.id}}" name="{{setting.id}}" [(ngModel)]="setting.value">
-            <option *ngFor="let option of setting.options" [value]="option">{{option}}</option>
+            <option *ngFor="let option of setting.options" [value]="option.value">{{option.text}}</option>
           </select>
+        </div>
+
+        <div *ngSwitchCase="'checkbox'">
+          <label attr.for="{{setting.id}}">{{setting.label}}</label>
+          <input type="checkbox" id="{{setting.id}}" name="{{setting.id}}" [(ngModel)]="setting.value">
         </div>
 
       </div>
