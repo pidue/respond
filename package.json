@@ -22,6 +22,7 @@
     "rxjs": "5.0.0-beta.6",
     "zone.js": "^0.6.12",
     "angular2-in-memory-web-api": "0.0.15",
+    "angular2-jwt": "^0.1.19",
     "bootstrap": "^3.3.6",
     "dropzone": "4.3.0",
     "hashedit": "0.5.18",
