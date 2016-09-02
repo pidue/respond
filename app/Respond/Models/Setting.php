@@ -227,10 +227,9 @@ class Setting {
           $el->setAttribute('class', $setting['value']);
         } else if ($setting['type'] == 'checkbox') {
           $currentClasses = $el->getAttribute('class');
+          $currentClasses = self::removeClass($currentClasses, $setting['class']);
           if ($setting['value']) {
             $currentClasses = self::addClass($currentClasses, $setting['class']);
-          } else {
-            $currentClasses = self::removeClass($currentClasses, $setting['class']);
           }
           $el->setAttribute('class', $currentClasses);
         }

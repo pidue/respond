@@ -744,7 +744,7 @@ body .app-form.standalone {
     font-size: 13px;
   }
 
-  body .app-form input[type=text], body .app-form input[type=password], body .app-form select {
+  body .app-form input[type=text], body .app-form input[type=password], body .app-form input[type=checkbox], body .app-form select {
     display: block;
     margin: 0 0 25px 0;
     padding: 10px;
